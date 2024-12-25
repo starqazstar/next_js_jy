@@ -1,0 +1,14 @@
+   72  git init
+   73  git config --global starqazstar
+   74  git config --global user.name
+   75  git config --global starqazstar
+   76  git config --global user.name "starqazstar"
+   77  git config --global user.email "941552610@qq.com"
+   78  git config --list
+   79  git add .
+   80  git commit -m "Initial commit"
+   81  git remote add origin https://github.com/starqazstar/next_js_jy.git
+   82  git branch -M main
+   83  git push -u origin main
+   84  mkdir git_history_backup
+   85  cd /Users/public1/Desktop/windsurf/my-app/git_history_backup
