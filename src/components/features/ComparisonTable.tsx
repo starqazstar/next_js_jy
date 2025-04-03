@@ -43,69 +43,57 @@ const features = [
 
 export default function ComparisonTable() {
   return (
-    <div className="bg-white">
+    <div className="py-12">
       <div className="mx-auto max-w-7xl">
-        <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Compare Features
-          </h2>
-          <p className="mt-4 text-lg leading-8 text-gray-600">
-            Choose the plan that best fits your needs
-          </p>
-        </div>
-        <div className="mt-16 flow-root">
-          <div className="isolate -mx-6 overflow-x-auto lg:-mx-8">
-            <div className="mx-auto max-w-7xl px-6 lg:px-8">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead>
-                  <tr>
-                    <th scope="col" className="py-3.5 pl-6 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                      Feature
-                    </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Basic
-                    </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Pro
-                    </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Enterprise
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {features.map((feature) => (
-                    <tr key={feature.name}>
-                      <td className="py-4 pl-6 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                        {feature.name}
-                      </td>
-                      <td className="px-3 py-4 text-sm text-gray-500">
-                        {feature.basic ? (
-                          <Check className="h-5 w-5 text-green-500" />
-                        ) : (
-                          <X className="h-5 w-5 text-gray-300" />
-                        )}
-                      </td>
-                      <td className="px-3 py-4 text-sm text-gray-500">
-                        {feature.pro ? (
-                          <Check className="h-5 w-5 text-green-500" />
-                        ) : (
-                          <X className="h-5 w-5 text-gray-300" />
-                        )}
-                      </td>
-                      <td className="px-3 py-4 text-sm text-gray-500">
-                        {feature.enterprise ? (
-                          <Check className="h-5 w-5 text-green-500" />
-                        ) : (
-                          <X className="h-5 w-5 text-gray-300" />
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          模板功能对比
+        </h2>
+        <p className="mt-6 text-lg leading-8 text-gray-600">
+          我们提供多种预设模板，满足不同场景的需求
+        </p>
+        <div className="mt-16 overflow-hidden rounded-xl border border-gray-200">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">功能</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">表单模板</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">列表模板</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">看板模板</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              <tr>
+                <td className="px-6 py-4 text-sm text-gray-900">数据录入</td>
+                <td className="px-6 py-4 text-sm text-gray-900">✓ 丰富的表单控件</td>
+                <td className="px-6 py-4 text-sm text-gray-900">✓ 快速编辑</td>
+                <td className="px-6 py-4 text-sm text-gray-900">-</td>
+              </tr>
+              <tr>
+                <td className="px-6 py-4 text-sm text-gray-900">数据展示</td>
+                <td className="px-6 py-4 text-sm text-gray-900">✓ 基础展示</td>
+                <td className="px-6 py-4 text-sm text-gray-900">✓ 表格/卡片视图</td>
+                <td className="px-6 py-4 text-sm text-gray-900">✓ 多种图表</td>
+              </tr>
+              <tr>
+                <td className="px-6 py-4 text-sm text-gray-900">数据筛选</td>
+                <td className="px-6 py-4 text-sm text-gray-900">-</td>
+                <td className="px-6 py-4 text-sm text-gray-900">✓ 高级筛选</td>
+                <td className="px-6 py-4 text-sm text-gray-900">✓ 维度筛选</td>
+              </tr>
+              <tr>
+                <td className="px-6 py-4 text-sm text-gray-900">数据导出</td>
+                <td className="px-6 py-4 text-sm text-gray-900">✓ Excel</td>
+                <td className="px-6 py-4 text-sm text-gray-900">✓ Excel/CSV</td>
+                <td className="px-6 py-4 text-sm text-gray-900">✓ 图表导出</td>
+              </tr>
+              <tr>
+                <td className="px-6 py-4 text-sm text-gray-900">权限控制</td>
+                <td className="px-6 py-4 text-sm text-gray-900">✓ 字段级</td>
+                <td className="px-6 py-4 text-sm text-gray-900">✓ 数据级</td>
+                <td className="px-6 py-4 text-sm text-gray-900">✓ 功能级</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

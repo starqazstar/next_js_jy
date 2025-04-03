@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/layout/Header";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -9,8 +8,8 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "TEA - Educational Platform",
-  description: "Transform your learning journey with our innovative educational platform",
+  title: "低代码平台",
+  description: "快速生成页面配置的低代码平台",
 };
 
 export default function RootLayout({
@@ -19,14 +18,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
-      <body className={`${geist.variable} font-sans antialiased min-h-full bg-[#F8F9FF]`}>
-        <div className="flex min-h-full flex-col">
-          <Header />
-          <main className="flex-1">
-            {children}
-          </main>
-        </div>
+    <html lang="zh" className="h-full" suppressHydrationWarning>
+      <body className={`${geist.variable} font-sans antialiased min-h-full bg-[#F8F9FF]`} suppressHydrationWarning>
+        {children}
       </body>
     </html>
   );

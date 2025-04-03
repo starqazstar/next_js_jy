@@ -1,0 +1,253 @@
+# 指引
+
+在与用户互动的过程中，如果你发现该项目中有任何可重用的内容（例如库的版本、模型名称），特别是关于你犯的错误的修正或收到的纠正，你应该在`.cursorrules`文件的`Lessons`部分记录下来，这样你就不会再犯同样的错误。
+
+你还应该使用`.cursorrules`文件作为草稿本来组织你的思路。特别是当你收到新任务时，你应该首先查看草稿本的内容，必要时清除旧的不同任务，先解释任务，并规划完成任务所需的步骤。你可以使用待办标记来指示进度，例如：
+[X] 任务1
+[ ] 任务2
+
+当你完成一个子任务时，也要在草稿本中更新任务的进度。
+特别是当你完成一个里程碑时，使用草稿本来反思和计划将有助于提高你完成任务的深度。
+目标是帮助你维持对任务的全局视图以及进度。在计划下一步时，始终参考草稿本。
+
+# 工具
+
+注意所有工具都是使用python3。因此，如果你需要进行批处理，你可以随时查阅python文件并编写自己的脚本。
+
+## 截图验证
+
+截图验证工作流允许你捕获网页的截图并使用LLM验证它们的外观。以下工具可用：
+
+1. 截图捕获：
+```bash
+venv/bin/python3 tools/screenshot_utils.py URL [--output OUTPUT] [--width WIDTH] [--height HEIGHT]
+```
+
+2. 使用图像进行LLM验证：
+```bash
+venv/bin/python3 tools/llm_api.py --prompt "你的验证问题" --provider {openai|anthropic} --image path/to/screenshot.png
+```
+
+示例工作流：
+```python
+from screenshot_utils import take_screenshot_sync
+from llm_api import query_llm
+
+# 截取屏幕
+
+screenshot_path = take_screenshot_sync('https://example.com', 'screenshot.png')
+
+# 使用LLM验证
+
+response = query_llm(
+    "这个网页的背景颜色和标题是什么？",
+    provider="openai",  # 或 "anthropic"
+    image_path=screenshot_path
+)
+print(response)
+```
+
+## LLM
+
+你始终有一个LLM在你身边帮助你完成任务。对于简单的任务，你可以通过运行以下命令调用LLM：
+```
+venv/bin/python3 ./tools/llm_api.py --prompt "法国的首都是什么？" --provider "anthropic"
+```
+
+LLM API支持多个提供商：
+- OpenAI（模型：gpt-4o-mini）
+- Azure OpenAI（模型：通过.env文件中的AZURE_OPENAI_MODEL_DEPLOYMENT配置，默认为gpt-4o-mini）
+- DeepSeek（默认，模型：deepseek-chat）
+- Anthropic（模型：claude-3-sonnet-20240229）
+- Gemini（模型：gemini-pro）
+- 本地LLM（模型：Qwen/Qwen2.5-32B-Instruct-AWQ）
+
+但通常更好的做法是检查文件内容并使用`tools/llm_api.py`文件中的API来调用LLM（如果需要）。
+
+## 网页浏览器
+
+你可以使用`tools/web_scraper.py`文件来抓取网页内容。
+```bash
+venv/bin/python3 ./tools/web_scraper.py --max-concurrent 3 URL1 URL2 URL3
+```
+这将输出网页的内容。
+
+## 搜索引擎
+
+你可以使用`tools/search_engine.py`文件来搜索网络。
+```bash
+venv/bin/python3 ./tools/search_engine.py "你的搜索关键词"
+```
+这将按以下格式输出搜索结果：
+```
+URL: https://example.com
+Title: 这是搜索结果的标题
+Snippet: 这是搜索结果的片段
+```
+如果需要，你可以进一步使用`web_scraper.py`文件来抓取网页内容。
+
+# 经验教训
+
+## 用户指定的经验教训
+
+- 你在./venv中有一个python虚拟环境。在进行python开发时，始终使用（激活）它。首先，检查'uv'是否可用，使用`which uv`。如果是这样，首先激活虚拟环境，然后使用`uv pip install`安装软件包。否则，退而求其次使用`pip`。
+- 由于Cursor的限制，当你使用`git`和`gh`并需要提交多行提交消息时，首先将消息写入文件，然后使用`git commit -F <文件名>`或类似命令进行提交。然后删除该文件。在提交消息和PR标题中包含"[Cursor] "。
+
+## Cursor学到的经验
+
+- 对于搜索结果，确保正确处理不同的字符编码（UTF-8）以应对国际查询
+- 在matplotlib中使用seaborn样式时，由于seaborn版本的最近变化，使用'seaborn-v0_8'而不是'seaborn'作为样式名称
+- 使用'gpt-4o'作为OpenAI支持视觉功能的GPT-4的模型名称
+- 在搜索最新新闻时，使用当前年份（2025）而不是往年，或者简单地使用"recent"关键词获取最新信息
+- 在删除组件时，需要同时更新 TailwindCSS 配置中的引用路径，避免构建错误
+- 在使用 Next.js App Router 时，如果组件使用了 React hooks，需要添加 "use client" 指令
+
+## Next.js 水合错误修复经验
+
+### 常见原因
+1. 服务器端和客户端渲染不匹配
+   - 使用了客户端特定的 API（如 window、document）
+   - 使用了动态生成的内容（如 Date.now()、Math.random()）
+   - 使用了不稳定的 key
+   - HTML 标签嵌套不正确
+   - 浏览器扩展修改了 HTML
+
+### 修复方法
+1. 组件级别：
+   - 添加 "use client" 指令到使用 React hooks 的组件
+   - 使用 useEffect 处理客户端特定的逻辑
+   - 确保动态内容有稳定的 key
+   - 避免不正确的 HTML 标签嵌套
+
+2. 布局级别：
+   - 在 html 和 body 标签上添加 suppressHydrationWarning 属性
+   - 使用 mounted 状态控制客户端渲染
+   - 提供合适的加载状态占位符
+
+3. 项目配置：
+   - 正确配置 TailwindCSS 的内容路径
+   - 确保所有依赖都正确安装
+   - 清理构建缓存后重启开发服务器
+
+## Next.js 项目最佳实践
+
+### 项目结构规范
+- 使用 src/ 目录作为源代码根目录，提高项目组织性
+- 在 src/app 下使用 Next.js App Router 进行路由管理
+- 将可重用组件放在 src/components 目录下，按功能模块分类
+- 将工具函数和配置放在 src/lib 目录下
+
+### 目录组织
+```
+src/
+├── app/                    # Next.js App Router 目录
+│   ├── login/             # 登录页面
+│   ├── contact-us/        # 联系我们页面
+│   ├── pricing/           # 定价页面
+│   ├── features/          # 功能特性页面
+│   ├── home/              # 首页
+│   ├── layout.tsx         # 根布局组件
+│   ├── page.tsx           # 根页面组件
+│   ├── globals.css        # 全局样式
+│   └── favicon.ico        # 网站图标
+│
+├── components/            # React 组件目录
+│   ├── home/             # 首页相关组件
+│   ├── contact/          # 联系页面组件
+│   ├── pricing/          # 定价页面组件
+│   ├── features/         # 功能特性页面组件
+│   ├── layout/           # 布局相关组件
+│   └── ui/               # UI 通用组件
+│
+└── lib/                  # 工具库目录
+    └── utils.ts          # 通用工具函数
+```
+
+### 开发规范
+- 使用 TypeScript 进行类型安全开发
+- 采用 Turbopack 提升开发环境性能
+- 组件按功能模块分类，保持目录结构清晰
+- UI组件与业务逻辑分离，提高复用性
+- 全局样式放在 app/globals.css
+- 页面级组件放在对应的 app/[page] 目录下
+- 共享组件放在 components 目录下对应的功能模块中
+
+# 草稿本
+
+## 当前任务：优化页面布局
+
+### 问题分析
+1. 页面显示了不需要的导航栏
+2. 页面标题和描述不符合当前项目
+
+### 任务步骤
+[X] 1. 修改根布局
+  [X] a. 移除 Header 组件
+  [X] b. 更新页面标题和描述
+  [X] c. 修改语言设置为中文
+
+[X] 2. 清理不需要的组件
+  [X] a. 移除导航相关的样式
+  [X] b. 简化布局结构
+
+### 进度追踪
+当前状态：完成布局优化
+下一步：测试页面显示效果
+
+## 当前任务：修复水合错误
+
+### 问题分析
+1. 服务器端和客户端渲染不匹配
+2. 可能的原因：
+   - 使用了客户端特定的 API
+   - 动态生成的内容没有稳定的 key
+   - HTML 标签嵌套不正确
+
+### 任务步骤
+[X] 1. 修复水合错误
+  [X] a. 检查并修复 HTML 标签嵌套
+  [X] b. 确保所有动态内容有稳定的 key
+  [X] c. 移除任何不必要的客户端 API 调用
+
+[X] 2. 优化组件渲染
+  [X] a. 使用 useEffect 处理客户端特定的逻辑
+  [X] b. 添加适当的加载状态
+
+### 进度追踪
+当前状态：完成水合错误修复
+下一步：测试页面功能
+
+## 当前任务：实现低代码平台页面生成器
+
+### 需求分析
+1. 页面结构：
+   - 顶部标题栏
+   - 主体内容使用 Tabs 分为"编辑器"和"预览"两个标签页
+2. 编辑器标签页内容：
+   - 测试用例卡片（预设模板）
+   - 页面配置卡片（输入和操作）
+3. 预览标签页内容：
+   - JSON 格式的 scheme 结果展示
+
+### 任务步骤
+[X] 1. 修改页面基础结构
+  [X] a. 移除现有的复杂布局
+  [X] b. 添加简单的标题栏
+  [X] c. 集成 Tabs 组件
+
+[X] 2. 实现编辑器标签页
+  [X] a. 创建测试用例卡片组件
+  [X] b. 创建页面配置卡片组件
+  [X] c. 布局两个卡片
+
+[X] 3. 实现预览标签页
+  [X] a. 创建 JSON 预览组件
+  [X] b. 添加格式化和复制功能
+
+[X] 4. 状态管理
+  [X] a. 添加页面配置状态
+  [X] b. 实现生成 scheme 的逻辑
+
+### 进度追踪
+当前状态：完成所有基础功能
+下一步：测试功能并优化用户体验

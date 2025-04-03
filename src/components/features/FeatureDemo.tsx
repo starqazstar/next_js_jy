@@ -1,36 +1,46 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 
 interface FeatureDemoProps {
   categoryId: string;
 }
 
-const demoContent = {
-  learning: {
-    title: 'Interactive Learning Tools',
-    description: 'Engage with our interactive learning tools designed to enhance your educational experience.',
+const testCases = {
+  form: {
+    title: '员工信息表单',
+    description: '创建一个员工信息录入表单，需要包含：姓名（必填）、年龄、部门、职位、入职日期等字段。',
     image: 'https://picsum.photos/800/600?random=1',
   },
-  assessment: {
-    title: 'Smart Assessment System',
-    description: 'Track your progress with our intelligent assessment and feedback system.',
+  list: {
+    title: '产品列表页',
+    description: '创建一个产品展示列表页面，包含产品图片、名称、价格、库存等信息，支持分页和筛选功能。',
     image: 'https://picsum.photos/800/600?random=2',
   },
-  collaboration: {
-    title: 'Collaborative Workspace',
-    description: 'Work together with peers and instructors in real-time collaborative environments.',
+  dashboard: {
+    title: '数据统计看板',
+    description: '创建一个数据统计看板，展示销售额、订单量、用户增长等关键指标，包含图表展示。',
     image: 'https://picsum.photos/800/600?random=3',
-  },
-  analytics: {
-    title: 'Learning Analytics',
-    description: 'Gain insights into your learning patterns with detailed analytics and progress tracking.',
-    image: 'https://picsum.photos/800/600?random=4',
   },
 };
 
 export default function FeatureDemo({ categoryId }: FeatureDemoProps) {
-  const content = demoContent[categoryId as keyof typeof demoContent];
+  const [loading, setLoading] = useState(false);
+  const content = testCases[categoryId as keyof typeof testCases];
+
+  const handleGenerate = async () => {
+    setLoading(true);
+    try {
+      // 模拟生成过程
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      // TODO: 实现实际的页面生成逻辑
+    } catch (error) {
+      console.error('生成失败:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="overflow-hidden bg-white rounded-lg shadow">
@@ -55,9 +65,11 @@ export default function FeatureDemo({ categoryId }: FeatureDemoProps) {
             <div className="mt-8">
               <button
                 type="button"
-                className="inline-flex items-center rounded-md bg-[#7B8AF9] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#6470E6]"
+                onClick={handleGenerate}
+                disabled={loading}
+                className="inline-flex items-center rounded-md bg-[#7B8AF9] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#6470E6] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Try Demo
+                {loading ? '生成中...' : '生成页面'}
               </button>
             </div>
           </div>
